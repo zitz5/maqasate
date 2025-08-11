@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>منصة دفعتنا - النظام المحاسبي الموحد</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #1a1a1a;
+    margin: 0;
+    padding: 40px 20px 80px;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  .fixed-number {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #fff600, #ffea00);
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow:
+      0 0 12px #fff600,
+      0 0 30px #ffea00;
+    user-select: none;
+    z-index: 1000;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #fff600, #ffea00, #fff600);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  h2 {
+    margin-bottom: 40px;
+    font-weight: 600;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: auto;
+  }
+
+  .accordion-item {
+    background: #2a2a1f;
+    border-radius: 18px;
+    margin-bottom: 22px;
+    box-shadow:
+      inset 2px 2px 8px #4d4d1a,
+      6px 6px 20px rgba(255, 255, 0, 0.6),
+      -6px -6px 20px rgba(255, 255, 50, 0.5);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 3px solid transparent;
+  }
+  .accordion-item:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      inset 3px 3px 12px #ffff33,
+      0 0 30px #fff700,
+      12px 12px 40px rgba(255, 255, 0, 0.9),
+      -12px -12px 40px rgba(255, 255, 50, 0.9);
+    border-color: #fff600;
+  }
+  .accordion-item.active {
+    border-color: #fff600;
+    box-shadow:
+      inset 3px 3px 14px #ffff55,
+      0 0 35px #fff700,
+      15px 15px 50px rgba(255, 255, 0, 1),
+      -15px -15px 50px rgba(255, 255, 50, 1);
+  }
+
+  .accordion-header {
+    padding: 24px 38px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff700;
+    user-select: none;
+    text-shadow:
+      0 0 10px #fff600,
+      0 0 20px #ffea00;
+  }
+
+  /* سهم أصفر نيوني مخفف */
+  .icon {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 22px;
+    height: 22px;
+    position: relative;
+  }
+  .icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 14px;
+    height: 5px;
+    background: #fff600;
+    border-radius: 3px;
+    box-shadow:
+      0 0 5px #fff600,
+      0 0 10px #ffea00;
+    transform: translateY(-50%);
+  }
+  .icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 7px;
+    height: 7px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid #fff600;
+    filter: drop-shadow(0 0 3px #ffea00);
+    transform: translateY(-50%);
+  }
+
+  .accordion-item.active .icon {
+    transform: rotate(90deg);
+  }
+  .accordion-item.active .icon::before, 
+  .accordion-item.active .icon::after {
+    filter: drop-shadow(0 0 6px #ffea00);
+    box-shadow:
+      0 0 7px #fff600;
+    border-left-color: #fff600;
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.55s ease, padding 0.45s ease;
+    background: #111109;
+    padding: 0 38px;
+    border-top: 3px solid #fff700;
+    border-radius: 0 0 18px 18px;
+  }
+  .accordion-content.open {
+    padding: 24px 38px 36px;
+  }
+  iframe {
+    width: 100%;
+    height: 440px;
+    border-radius: 16px;
+    border: none;
+    box-shadow:
+      0 0 8px #fff700,
+      inset 0 0 10px #fff600;
+    background: #000;
+  }
+
+  footer {
+    text-align: center;
+    padding: 22px 16px;
+    font-size: 0.95rem;
+    color: #fffa77;
+    text-shadow: 0 0 5px #fffa77;
+    border-top: 2px solid #fff700;
+    margin-top: 40px;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  @media (max-width: 650px) {
+    .accordion-header {
+      font-size: 1.15rem;
+      padding: 20px 25px;
+    }
+    .accordion-content.open {
+      padding: 20px 25px 30px;
+    }
+    iframe {
+      height: 280px;
+    }
+    .fixed-number {
+      font-size: 1.1rem;
+      padding: 6px 14px;
+      top: 18px;
+      left: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="fixed-number">R-514</div>
+
+  <div class="container">
+    <h1>منصة دفعتنا</h1>
+    <h2>النظام المحاسبي الموحد</h2>
+
+    <!-- محاضرات accordion -->
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 1
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1MTXUw-wEkKRIDgOhg0onZB8v906qGFcP/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 2
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1LKjP8cjtKB3G2u7oNi9TR0Zcw8dfSi5i/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 3
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1YMcw1KySwXWOWpStFKdDy6z1Cs7UBIb3/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 4
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1Uf6AHtr05n1lGiZZ4QT-D9IXfRQZUzwv/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 5
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/11cDVNPIX6KvW8hsFZi3CCCK_MdXIU8ls/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 6
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1cwaMU3duW2pXO3h3LCoFDBkI4OUFfqG7/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 7
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1kX3iLwS0f8HF5p6PE3JvXuJmDnKCRZnV/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 8
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/16ihcNObUgZD1nDlgxhEeg635VA9kbqPP/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 9
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1KutWOTsAWGf6pEpN3xQ5AxYBcF4p_vK6/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 10
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1YG5EQQf_WobSdE7kZDyo4E5b9AOMWWqn/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 11
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/13tDFd-Nn4aU7JwwKQrj92v7m1aWW-8Ai/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 12
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1KJBY559i4gLyIpyV378Xd0dAAxkRdERI/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 13
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1kLoAnvIZKfF3WST8eoXWU8uRVQDAAqL8/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 14
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/11DSmV5GXCdDjbML5OCL4dtwAl81Lkr7n/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 15
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/10eVpopHWr2TChg-8PgqrV1Xit0iFEXO1/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 16
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1miIWwjG_lyYR-bnb5y85q5oYFPzvBDGT/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 17
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/11NQbTzXa-w4FwDndOL-mvU1zyqufbzzw/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 18
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1rIV2ahnf7cmt18QZrrF0hxohIZPLYcSE/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 19
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1VDDNYZ2S9GcB9Rfht-zSYbllwfkWMUBU/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 20
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1bgGReHNzMkztm51L7BpKRyP8MCRn6TEH/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header">
+        محاضرة 21
+        <span class="icon"></span>
+      </div>
+      <div class="accordion-content">
+        <iframe src="https://drive.google.com/file/d/1RkkIVPcamVwpAKu8yhbKcBFIxEdg4FMo/preview" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <footer>جميع الحقوق محفوظة &copy; 2025 منصة دفعتنا</footer>
+
+<script>
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const item = header.parentElement;
+      const openItem = document.querySelector('.accordion-item.active');
+      if (openItem && openItem !== item) {
+        openItem.classList.remove('active');
+        openItem.querySelector('.accordion-content').style.maxHeight = null;
+        openItem.querySelector('.accordion-content').classList.remove('open');
+      }
+      item.classList.toggle('active');
+      const content = item.querySelector('.accordion-content');
+      if (item.classList.contains('active')) {
+        content.style.maxHeight = content.scrollHeight + "px";
+        content.classList.add('open');
+      } else {
+        content.style.maxHeight = null;
+        content.classList.remove('open');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
